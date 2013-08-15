@@ -37,9 +37,14 @@ class ArquivosController
 	public function salvarAction()
 	{
 		try {
-
+			$file = $this->getFileFromRequest(true);
+			$content = $this->app['file.reader']->decodeBase64(
+				$this->app['request']->get('content')
+			);
+			$file->setContent($content);
+			$this->app['file.writter']->write($file);
 		} catch(Exception $e) {
-
+			return $this->generateJsonResponseFromException($e);
 		}
 
 		return new JsonResponse(array(
@@ -58,11 +63,11 @@ class ArquivosController
 		return new JsonResponse(array());
 	}
 
-	protected function getFileFromRequest()
+	protected function getFileFromRequest($isNew = false)
 	{
 		$filename = $this->app['request']->get('filename');
 		$this->app['monolog']->info('Tentando ler o arquivo ' . $filename);
-		return $this->app['file.reader']->getFile($filename);
+		return $this->app['file.reader']->getFile($filename, $isNew);
 	}
 
 	protected function generateJsonResponseFromException(\Exception $exception)
