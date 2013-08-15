@@ -1,6 +1,6 @@
 <?php
 
-namespace MS\API\StarTwo\Controller;
+namespace MS\API\FileManager\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Application;

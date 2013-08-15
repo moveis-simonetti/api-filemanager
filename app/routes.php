@@ -1,6 +1,6 @@
 <?php
 
-use MS\API\StarTwo\Controller as Controllers;
+use MS\API\FileManager\Controller as Controllers;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 $app['home.controller'] = $app->share(function(){
