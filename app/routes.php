@@ -7,25 +7,21 @@ $app['home.controller'] = $app->share(function(){
 	return new Controllers\HomeController();
 });
 
-$app['error.controller'] = $app->share(function(){
-	return new Controllers\ErrorController();
-});
-
-$app['arquivos.controller'] = $app->share(function() use($app) {
-	return new Controllers\ArquivosController($app);
+$app['file.controller'] = $app->share(function() use($app) {
+	return new Controllers\FileController($app);
 });
 
 $app->get('/', 'home.controller:indexAction');
 
-$app->post('/ler-arquivo', 'arquivos.controller:lerAction');
+$app->post('/read-file', 'file.controller:readAction');
 
-$app->post('/listar-arquivos', 'arquivos.controller:lerAction');
+$app->post('/list-files', 'file.controller:listAction');
 
-$app->post('/salvar-arquivo', 'arquivos.controller:salvarAction');
+$app->post('/save-file', 'file.controller:saveAction');
 
-$app->post('/apagar-arquivo', 'arquivos.controller:apagarAction');
+$app->post('/delete-file', 'file.controller:deleteAction');
 
-$app->post('/apagar-varios-arquivos', 'arquivos.controller:apagarVariosAction');
+$app->post('/delete-multiple-files', 'file.controller:deleteMultipleAction');
 
 $app->error(function (\Exception $e, $code){
 	

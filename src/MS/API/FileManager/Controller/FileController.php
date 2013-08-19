@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Application;
 
-class ArquivosController
+class FileController
 {
 	/**
 	 * @var Silex\Application
@@ -17,7 +17,7 @@ class ArquivosController
 		$this->app = $app;
 	}
 
-	public function lerAction()
+	public function readAction()
 	{
 		try {
 			$file = $this->getFileFromRequest();
@@ -34,7 +34,7 @@ class ArquivosController
 		);
 	}
 
-	public function salvarAction()
+	public function saveAction()
 	{
 		try {
 			$file = $this->getFileFromRequest(true);
@@ -53,12 +53,12 @@ class ArquivosController
 		);
 	}
 
-	public function apagarAction()
+	public function deleteAction()
 	{
 		return new JsonResponse(array());
 	}
 
-	public function apagarVariosAction()
+	public function deleteMultipleAction()
 	{
 		return new JsonResponse(array());
 	}
