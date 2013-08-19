@@ -5,6 +5,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Application;
 
+/**
+ * FileController
+ * @author Vinicius de Sa <viniciusss@me.com>
+*/
 class FileController
 {
 	/**
@@ -51,6 +55,11 @@ class FileController
 				'success' => true,
 			)
 		);
+	}
+
+	public function listAction()
+	{
+		return new JsonResponse(array());
 	}
 
 	public function deleteAction()

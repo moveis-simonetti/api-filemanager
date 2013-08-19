@@ -2,10 +2,7 @@
 
 namespace MS\FileWrapper\Exception;
 
-class FileNotSaveException extends \Exception
+class FileNotSaveException extends FileException
 {
-	public function __construct($msg = '', $code = 404)
-	{
-		parent::__construct($msg, $code);
-	}
+	protected $errorMessage = 'Aconteceu algum erro ao escrever o arquivo %s.';
 }

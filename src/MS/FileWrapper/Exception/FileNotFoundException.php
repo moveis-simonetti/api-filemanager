@@ -2,10 +2,7 @@
 
 namespace MS\FileWrapper\Exception;
 
-class FileNotFoundException extends \Exception
+class FileNotFoundException extends FileException
 {
-	public function __construct($msg = '', $code = 404)
-	{
-		parent::__construct($msg, $code);
-	}
+	protected $errorMessage = 'Arquivo %s nao encontrado ou nao pode ser lido.';
 }

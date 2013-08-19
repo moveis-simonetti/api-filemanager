@@ -2,10 +2,7 @@
 
 namespace MS\FileWrapper\Exception;
 
-class FileNotWritableException extends \Exception
+class FileNotWritableException extends FileException
 {
-	public function __construct($msg = '', $code = 404)
-	{
-		parent::__construct($msg, $code);
-	}
+	protected $errorMessage = 'O arquivo %s nao pode ser escrito. Sem permissao.';
 }

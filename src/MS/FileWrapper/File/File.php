@@ -2,26 +2,16 @@
 
 namespace MS\FileWrapper\File;
 
-class File
+use MS\FileWrapper\Exception\FileNotFoundException;
+use MS\FileWrapper\Exception\FileNotWritableException;
+
+class File extends \SplFileInfo
 {
-	protected $fileName;
-
+	/**
+	 * Content of the file
+	 * @var string
+	*/
 	protected $content;
-
-	public function __construct($filename)
-	{
-		$this->setFileName($filename);
-	}
-
-	public function setFileName($fileName)
-	{
-		$this->fileName = $fileName;
-	}
-
-	public function getFileName()
-	{
-		return $this->fileName;
-	}
 
 	public function setContent($content)
 	{
@@ -45,6 +35,21 @@ class File
 
 	public function getContentFromDisc()
 	{
-		return file_get_contents($this->getFileName());
+		$this->checkIsNotReadable();
+		return file_get_contents($this->getPathName());
+	}
+
+	public function checkIsNotWritable()
+	{
+		if( ! $this->isWritable() ) {
+			throw new FileNotWritableException($this->getPathName());
+		}
+	}
+
+	public function checkIsNotReadable()
+	{
+		if( ! $this->isReadable() ) {
+			throw new FileNotFoundException($this->getPathName());
+		}
 	}
 }
