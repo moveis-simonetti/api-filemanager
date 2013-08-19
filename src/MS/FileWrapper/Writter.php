@@ -3,6 +3,7 @@
 namespace MS\FileWrapper;
 
 use MS\FileWrapper\Exception\FileNotSaveException;
+use MS\FileWrapper\Exception\FileNotUnlikedException;
 use MS\FileWrapper\File\File;
 
 /**
@@ -30,9 +31,9 @@ class Writter
 		$file->checkIsNotReadable();
 		$file->checkIsNotWritable();
 
-		if( false === unlink($file) )
+		if( false === @unlink($file) )
 		{
-			throw new 
+			throw new FileNotUnlikedException($file->getPathName());
 		}
 	}
 

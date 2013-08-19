@@ -57,6 +57,10 @@ class FileController
 		);
 	}
 
+	/**
+	 * Lista arquivos de um diretorio
+	 * @return JsonResponse
+	*/
 	public function listAction()
 	{
 		return new JsonResponse(array());
