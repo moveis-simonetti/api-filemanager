@@ -85,7 +85,9 @@ class FileController
     public function deleteAction($nomeArquivo)
     {
         unlink($this->app['file.reader']->decodeBase64($nomeArquivo));
-        return new JsonResponse(array());
+        return new JsonResponse(
+            ['success' => true]
+        );
     }
 
     /**
