@@ -1,6 +1,7 @@
 <?php
 
 namespace MS\API\FileManager\Controller;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Application;
@@ -8,90 +9,109 @@ use Silex\Application;
 /**
  * FileController
  * @author Vinicius de Sa <viniciusss@me.com>
-*/
+ */
 class FileController
 {
-	/**
-	 * @var Silex\Application
-	*/
-	protected $app;
+    /**
+     * @var Application
+     */
+    protected $app;
 
-	public function __construct(Application $app)
-	{
-		$this->app = $app;
-	}
+    /**
+     * FileController constructor.
+     * @param Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
-	public function readAction()
-	{
-		try {
-			$file = $this->getFileFromRequest();
-			$content = $this->app['file.reader']->toBase64($file->getContent());
-		} catch(\Exception $e) {
-			return $this->generateJsonResponseFromException($e);
-		}
-		
-		return new JsonResponse(
-			array(
-				'success' => true,
-				'content' => $content
-			)
-		);
-	}
+    /**
+     * @param $nomeArquivo
+     * @return JsonResponse
+     */
+    public function readAction($nomeArquivo)
+    {
+        try {
+            $file = $this->getFileFromRequest($this->app['file.reader']->decodeBase64($nomeArquivo));
+            $content = $file->getContent();
 
-	public function saveAction()
-	{
-		try {
-			$file = $this->getFileFromRequest(true);
-			$content = $this->app['file.reader']->decodeBase64(
-				$this->app['request']->get('content')
-			);
-			$file->setContent($content);
-			$this->app['file.writter']->write($file);
-		} catch(Exception $e) {
-			return $this->generateJsonResponseFromException($e);
-		}
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'content' => $content
+                ]
+            );
 
-		return new JsonResponse(array(
-				'success' => true,
-			)
-		);
-	}
+        } catch (\Exception $e) {
+            return $this->generateJsonResponseFromException($e);
+        }
+    }
 
-	/**
-	 * Lista arquivos de um diretorio
-	 * @return JsonResponse
-	*/
-	public function listAction()
-	{
-		return new JsonResponse(array());
-	}
+    /**
+     * @param string $nomeArquivo
+     * @param string $conteudo
+     * @return JsonResponse
+     */
+    public function saveAction($nomeArquivo, $conteudo)
+    {
+        try {
+            $file = $this->getFileFromRequest($this->app['file.reader']->decodeBase64($nomeArquivo));
+            $file->setContent($this->app['file.reader']->decodeBase64($conteudo));
+            $this->app['file.writter']->write($file);
+        } catch (Exception $e) {
+            return $this->generateJsonResponseFromException($e);
+        }
 
-	public function deleteAction()
-	{
-		return new JsonResponse(array());
-	}
+        return new JsonResponse(
+            ['success' => true]
+        );
+    }
 
-	public function deleteMultipleAction()
-	{
-		return new JsonResponse(array());
-	}
+    /**
+     * @param $diretorio
+     * @return JsonResponse
+     */
+    public function listAction($diretorio)
+    {
+        $files = glob($this->app['file.reader']->decodeBase64($diretorio) . '\*');
+        return new JsonResponse($files);
+    }
 
-	protected function getFileFromRequest($isNew = false)
-	{
-		$filename = $this->app['request']->get('filename');
-		$this->app['monolog']->info('Tentando ler o arquivo ' . $filename);
-		return $this->app['file.reader']->getFile($filename, $isNew);
-	}
+    /**
+     * @param $nomeArquivo
+     * @return JsonResponse
+     */
+    public function deleteAction($nomeArquivo)
+    {
+        unlink($this->app['file.reader']->decodeBase64($nomeArquivo));
+        return new JsonResponse(array());
+    }
 
-	protected function generateJsonResponseFromException(\Exception $exception)
-	{
-		$this->app['monolog']->error($exception->getMessage());
-		return new JsonResponse(
-			array(
-				'success' => false,
-				'error' => $exception->getMessage(),
-			),
-			$exception->getCode()
-		);
-	}
+    /**
+     * @param $filename
+     * @param bool $isNew
+     * @return mixed
+     */
+    protected function getFileFromRequest($filename, $isNew = false)
+    {
+        $this->app['monolog']->info('Tentando ler o arquivo ' . $filename);
+        return $this->app['file.reader']->getFile($filename, $isNew);
+    }
+
+    /**
+     * @param \Exception $exception
+     * @return JsonResponse
+     */
+    protected function generateJsonResponseFromException(\Exception $exception)
+    {
+        $this->app['monolog']->error($exception->getMessage());
+        return new JsonResponse(
+            array(
+                'success' => false,
+                'error' => $exception->getMessage(),
+            ),
+            $exception->getCode()
+        );
+    }
 }

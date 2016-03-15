@@ -3,32 +3,33 @@
 use MS\API\FileManager\Controller as Controllers;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-$app['home.controller'] = $app->share(function(){
-	return new Controllers\HomeController();
-});
+$app['home.controller'] = $app->share(
+    function () {
+        return new Controllers\HomeController();
+    }
+);
 
-$app['file.controller'] = $app->share(function() use($app) {
-	return new Controllers\FileController($app);
-});
+$app['file.controller'] = $app->share(
+    function () use ($app) {
+        return new Controllers\FileController($app);
+    }
+);
 
 $app->get('/', 'home.controller:indexAction');
 
-$app->post('/read-file', 'file.controller:readAction');
+$app->get('/diretorio/{diretorio}', 'file.controller:listAction'); // Listar
+$app->get('/file/{nomeArquivo}', 'file.controller:readAction'); // Ler conteúdo
 
-$app->post('/list-files', 'file.controller:listAction');
+$app->post('/file/{nomeArquivo}/{conteudo}', 'file.controller:saveAction'); // Salvar arquivo
 
-$app->post('/save-file', 'file.controller:saveAction');
+$app->delete('/file/{nomeArquivo}', 'file.controller:deleteAction'); // Remover
 
-$app->post('/delete-file', 'file.controller:deleteAction');
-
-$app->post('/delete-multiple-files', 'file.controller:deleteMultipleAction');
-
-$app->error(function (\Exception $e, $code){
-	
-	$return = array(
-		'success' => false,
-		'message' => $e->getMessage(),
-	);
-
-	return new JsonResponse($return);
-});
+$app->error(
+    function (\Exception $e, $code) {
+        $return = array(
+            'success' => false,
+            'message' => $e->getMessage(),
+        );
+        return new JsonResponse($return);
+    }
+);

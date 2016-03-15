@@ -5,51 +5,79 @@ namespace MS\FileWrapper\File;
 use MS\FileWrapper\Exception\FileNotFoundException;
 use MS\FileWrapper\Exception\FileNotWritableException;
 
-class File extends \SplFileInfo
+class File
 {
-	/**
-	 * Content of the file
-	 * @var string
-	*/
-	protected $content;
+    /**
+     * @var string
+     */
+    private $path;
+    /**
+     * Content of the file
+     * @var string
+     */
+    protected $content;
 
-	public function setContent($content)
-	{
-		$this->content = $content;
-	}
+    /**
+     * File constructor.
+     * @param string $path
+     */
+    public function __construct($path)
+    {
+        $this->path = $path;
+    }
 
-	public function getContent()
-	{
-		if( is_null($this->content) )
-			$this->setContentFromDisc();
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 
-		return $this->content;
-	}
+    /**
+     * @param $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
 
-	public function setContentFromDisc()
-	{
-		$this->setContent(
-			$this->getContentFromDisc()
-		);
-	}
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        if (is_null($this->content)) {
+            $this->setContentFromDisc();
+        }
 
-	public function getContentFromDisc()
-	{
-		$this->checkIsNotReadable();
-		return file_get_contents($this->getPathName());
-	}
+        return $this->content;
+    }
 
-	public function checkIsNotWritable()
-	{
-		if( ! $this->isWritable() ) {
-			throw new FileNotWritableException($this->getPathName());
-		}
-	}
+    public function setContentFromDisc()
+    {
+        $this->setContent(
+            $this->getContentFromDisc()
+        );
+    }
 
-	public function checkIsNotReadable()
-	{
-		if( ! $this->isReadable() ) {
-			throw new FileNotFoundException($this->getPathName());
-		}
-	}
+    public function getContentFromDisc()
+    {
+        $this->checkIsNotReadable();
+        return file_get_contents($this->path);
+    }
+
+    public function checkIsNotWritable()
+    {
+        if (!is_writable(dirname($this->path))) {
+            throw new FileNotWritableException($this->path);
+        }
+    }
+
+    public function checkIsNotReadable()
+    {
+        if (!is_readable($this->path)) {
+            throw new FileNotFoundException($this->path);
+        }
+    }
 }

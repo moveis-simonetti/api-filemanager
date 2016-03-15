@@ -7,38 +7,49 @@ use MS\FileWrapper\Exception\FileNotUnlikedException;
 use MS\FileWrapper\File\File;
 
 /**
- * 
-*/
+ * Class Writter
+ * @package MS\FileWrapper
+ */
 class Writter
 {
-	public function write(File $file)
-	{
-		$file->checkIsNotWritable();
+    /**
+     * @param File $file
+     * @return bool
+     */
+    public function write(File $file)
+    {
+        $file->checkIsNotWritable();
 
-		if( false === file_put_contents($file->getPathName(), $file->getContent(), LOCK_EX) ) {
-			throw new FileNotSaveException($file->getPathName());
-		}
+        if (false === file_put_contents($file->getPath(), $file->getContent(), LOCK_EX)) {
+            throw new FileNotSaveException($file->getPath());
+        }
 
-		if( ! $this->isEqualToDisc($file) ) {
-			throw new FileNotSaveException($file->getPathName());
-		}
+        if (!$this->isEqualToDisc($file)) {
+            throw new FileNotSaveException($file->getPath());
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public function unlink(File $file)
-	{
-		$file->checkIsNotReadable();
-		$file->checkIsNotWritable();
+    /**
+     * @param File $file
+     */
+    public function unlink(File $file)
+    {
+        $file->checkIsNotReadable();
+        $file->checkIsNotWritable();
 
-		if( false === @unlink($file) )
-		{
-			throw new FileNotUnlikedException($file->getPathName());
-		}
-	}
+        if (false === @unlink($file)) {
+            throw new FileNotUnlikedException($file->getPath());
+        }
+    }
 
-	public function isEqualToDisc(File $file)
-	{
-		return ($file->getContent() == $file->getContentFromDisc());
-	}
+    /**
+     * @param File $file
+     * @return bool
+     */
+    public function isEqualToDisc(File $file)
+    {
+        return ($file->getContent() == $file->getContentFromDisc());
+    }
 }
