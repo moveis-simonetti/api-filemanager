@@ -12,13 +12,15 @@ class File
      */
     private $path;
     /**
-     * Content of the file
+     * Content of the file.
+     *
      * @var string
      */
     protected $content;
 
     /**
      * File constructor.
+     *
      * @param string $path
      */
     public function __construct($path)
@@ -64,6 +66,7 @@ class File
     public function getContentFromDisc()
     {
         $this->checkIsNotReadable();
+
         return file_get_contents($this->path);
     }
 

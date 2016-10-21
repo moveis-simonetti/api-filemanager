@@ -4,10 +4,10 @@ $app = new Silex\Application();
 
 // Carregando providers necessarios
 $app->register(
-	new Silex\Provider\MonologServiceProvider(),
-	array(
-    	'monolog.logfile' => __DIR__.'/logs/development.log',
-	)
+    new Silex\Provider\MonologServiceProvider(),
+    [
+        'monolog.logfile' => __DIR__.'/logs/development.log',
+    ]
 );
 $app->register(new MS\Provider\FileManagerProvider());
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
@@ -17,6 +17,6 @@ error_reporting(E_ALL);
 $app['debug'] = true;
 
 // Carregando rotas
-include __DIR__ . '/routes.php';
+include __DIR__.'/routes.php';
 
 return $app;

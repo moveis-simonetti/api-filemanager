@@ -7,13 +7,13 @@ use MS\FileWrapper\Exception\FileNotUnlikedException;
 use MS\FileWrapper\File\File;
 
 /**
- * Class Writter
- * @package MS\FileWrapper
+ * Class Writter.
  */
 class Writter
 {
     /**
      * @param File $file
+     *
      * @return bool
      */
     public function write(File $file)
@@ -46,10 +46,11 @@ class Writter
 
     /**
      * @param File $file
+     *
      * @return bool
      */
     public function isEqualToDisc(File $file)
     {
-        return ($file->getContent() == $file->getContentFromDisc());
+        return $file->getContent() == $file->getContentFromDisc();
     }
 }

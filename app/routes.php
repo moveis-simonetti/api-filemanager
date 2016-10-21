@@ -26,10 +26,11 @@ $app->delete('/file/{nomeArquivo}', 'file.controller:deleteAction'); // Remover
 
 $app->error(
     function (\Exception $e, $code) {
-        $return = array(
+        $return = [
             'success' => false,
             'message' => $e->getMessage(),
-        );
+        ];
+
         return new JsonResponse($return);
     }
 );
